@@ -23,7 +23,7 @@ const linkVariant = {
 };
 
 export const Nav = () => {
-  const product = useContext(ProductContext);
+  const [state, dispatch] = useContext(ProductContext);
   return (
     <Bootstrap.Navbar collapseOnSelect className="nav__bg pt-3">
       <Bootstrap.Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -67,7 +67,7 @@ export const Nav = () => {
             whileHover="hover"
           >
             <Link to="/cart" className="nav__link p-2">
-              <Badge color="error" badgeContent={product.shoes.cart.length}>
+              <Badge color="error" badgeContent={state.cart.length}>
                 <ShoppingCartIcon />
               </Badge>
             </Link>

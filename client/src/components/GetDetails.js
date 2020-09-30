@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { ProductContext } from "../ProductContext";
+import { ProductContext, ACTIONS } from "../ProductContext";
 import * as Bootstrap from "react-bootstrap";
 import "./css/shop.css";
 import Button from "@material-ui/core/Button";
@@ -28,15 +28,11 @@ const containerVariant = {
 export const GetDetails = (props) => {
   const [initial, setInitial] = useState({ opacity: 0, x: "-200vw" });
 
-  const products = useContext(ProductContext);
+  const [state, dispatch] = useContext(ProductContext);
 
-  const shoe = products.shoes.products.filter((item) => {
+  const shoe = state.products.filter((item) => {
     return Number(item._id) === Number(props.match.params.id);
   });
-
-  const addToCart = () => {
-    products.addToCart(props.match.params.id);
-  };
 
   const addAnimation = () => {
     setInitial({
@@ -66,7 +62,7 @@ export const GetDetails = (props) => {
         animate={initial}
         className="details__added"
       >
-        {products.shoes.error ? "Already added !!!" : "Added to cart"}
+        {state.error ? "Already added !!!" : "Added to cart"}
       </motion.div>
       <Bootstrap.Card style={{ width: "18rem" }} className="shop__card">
         <Bootstrap.Card.Img variant="top" src={shoe[0].img} />
@@ -97,7 +93,10 @@ export const GetDetails = (props) => {
             className="btn-block"
             onClick={() => {
               addAnimation();
-              addToCart();
+              dispatch({
+                type: ACTIONS.ADD,
+                payload: { id: props.match.params.id },
+              });
             }}
           >
             Add to cart

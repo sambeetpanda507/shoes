@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ProductContext } from "../ProductContext";
+import { ProductContext, ACTIONS } from "../ProductContext";
 import { motion } from "framer-motion";
 import LocalMallIcon from "@material-ui/icons/LocalMall";
 import Button from "@material-ui/core/Button";
@@ -37,23 +37,16 @@ const cartIconVariant = {
 };
 
 export const Cart = () => {
-  const products = useContext(ProductContext);
+  const [state, dispatch] = useContext(ProductContext);
 
-  let totalPrice = products.shoes.cart.reduce(
+  let totalPrice = state.cart.reduce(
     (acc, currVal) => acc + currVal.price * currVal.count,
     0
   );
 
-  // const countChanger = () => {
-  //   setIinitialCount([...initialCount, "a"]);
-  // };
-
-  const removeHandler = (e) => {
-    products.removeFromCart(e.target.id);
-  };
   return (
     <div className="container">
-      {products.shoes.cart.length <= 0 && (
+      {state.cart.length <= 0 && (
         <motion.div
           className="text-center mt-5"
           variants={cartIconVariant}
@@ -69,7 +62,7 @@ export const Cart = () => {
           <p className="text-secondary">Cart Empty</p>
         </motion.div>
       )}
-      {products.shoes.cart.map((shoes) => {
+      {state.cart.map((shoes) => {
         return (
           <motion.div
             key={shoes._id}
@@ -102,10 +95,11 @@ export const Cart = () => {
                 <div>
                   <button
                     className="btn btn-sm btn-outline-success font-weight-bold"
-                    id={shoes._id}
                     onClick={(e) => {
-                      products.removeHandler(e.target.id);
-                      // countChanger();
+                      dispatch({
+                        type: ACTIONS.DEC,
+                        payload: { id: shoes._id },
+                      });
                     }}
                   >
                     -
@@ -115,10 +109,11 @@ export const Cart = () => {
                   </span>
                   <button
                     className="btn btn-sm btn-outline-success font-weight-bold"
-                    id={shoes._id}
                     onClick={(e) => {
-                      products.addHandler(e.target.id);
-                      // countChanger();
+                      dispatch({
+                        type: ACTIONS.INC,
+                        payload: { id: shoes._id },
+                      });
                     }}
                   >
                     +
@@ -126,8 +121,12 @@ export const Cart = () => {
                 </div>
                 <button
                   className="btn btn-danger btn-sm mt-1"
-                  id={shoes._id}
-                  onClick={removeHandler}
+                  onClick={() => {
+                    dispatch({
+                      type: ACTIONS.REMOVE,
+                      payload: { id: shoes._id },
+                    });
+                  }}
                 >
                   remove from cart
                 </button>
@@ -136,7 +135,7 @@ export const Cart = () => {
           </motion.div>
         );
       })}
-      {products.shoes.cart.length > 0 && (
+      {state.cart.length > 0 && (
         <motion.div
           className="row d-flex justify-content-around align-items-center my-3 text-center"
           variants={productVariant}

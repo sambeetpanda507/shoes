@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import * as Bootstrap from "react-bootstrap";
 import Button from "@material-ui/core/Button";
-import { ProductContext } from "../ProductContext";
+import { ProductContext, ACTIONS } from "../ProductContext";
 import { Link } from "react-router-dom";
 
 export const Product = ({
@@ -14,11 +14,7 @@ export const Product = ({
   addAnimation,
   history,
 }) => {
-  const product = useContext(ProductContext);
-
-  const addToCart = () => {
-    product.addToCart(_id);
-  };
+  const [state, dispatch] = useContext(ProductContext);
 
   return (
     <Bootstrap.Card style={{ width: "18rem" }} className="shop__card">
@@ -59,7 +55,10 @@ export const Product = ({
           size="small"
           onClick={() => {
             addAnimation();
-            addToCart();
+            dispatch({
+              type: ACTIONS.ADD,
+              payload: { id: _id },
+            });
           }}
         >
           Add to cart

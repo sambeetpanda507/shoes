@@ -25,9 +25,7 @@ const productVariant = {
 export const ShopNow = (props) => {
   const [initial, setInitial] = useState({ opacity: 0, x: "200vw" });
 
-  const products = useContext(ProductContext);
-
-  console.log(products);
+  const [state, dispatch] = useContext(ProductContext);
 
   const addAnimation = () => {
     setInitial({
@@ -52,9 +50,9 @@ export const ShopNow = (props) => {
           animate={initial}
           className="shop__added"
         >
-          {products.shoes.error ? "Already added !!!" : "Added to cart"}
+          {state.error ? "Already added !!!" : "Added to cart"}
         </motion.div>
-        {products.shoes.products.map((items) => {
+        {state.products.map((items) => {
           return (
             <motion.div
               key={items._id}
