@@ -1,0 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Faster+One&family=Poppins:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Vast+Shadow&display=swap");
+
+.landing {
+  height: 430px;
+  width: 100vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* .landing__text {
+  height: 200px !important;
+} */
+
+.landing__text h1 {
+  font-size: 3.5rem !important;
+  font-family: "Faster One", cursive;
+}
+
+.landing__text h4 {
+  font-family: "Vast Shadow", cursive;
+}

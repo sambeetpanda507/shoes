@@ -1,0 +1,38 @@
+.shop__card {
+  box-shadow: -1px 3px 5px 0px rgba(0, 0, 0, 1);
+}
+
+.shop__added {
+  position: fixed;
+  z-index: 100;
+  background-color: rgb(214, 140, 127);
+  padding: 10px;
+  width: 250px;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  right: 0px;
+  top: 40%;
+  font-weight: bolder;
+  color: rgb(34, 33, 33);
+  font-size: larger;
+  text-align: center;
+  text-transform: capitalize;
+  box-shadow: -7px 3px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.details__added {
+  position: fixed;
+  z-index: 100;
+  background-color: rgb(214, 140, 127);
+  padding: 10px;
+  width: 250px;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  left: 0px;
+  font-weight: bolder;
+  color: rgb(34, 33, 33);
+  font-size: larger;
+  text-align: center;
+  text-transform: capitalize;
+  box-shadow: -7px 3px 5px 0px rgba(0, 0, 0, 0.75);
+}
