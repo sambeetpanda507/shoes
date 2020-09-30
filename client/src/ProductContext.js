@@ -119,6 +119,7 @@ export const ProductProvider = (props) => {
         addToCart: addToCart,
         removeFromCart: removeFromCart,
         addHandler: addHandler,
+        removeHandler: removeHandler,
       }}
     >
       {props.children}
