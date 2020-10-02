@@ -1,0 +1,17 @@
+.signin__form {
+    /* border: 1px solid rgb(167, 167, 167);
+    background: rgb(241, 240, 240);
+    box-shadow: -5px 10px 5px 0px rgba(0, 0, 0, 0.75);
+    border-radius: 5px; */
+}
+
+/* @media (min-width: "992px") {
+} */
+
+@media (min-width: 992px) {
+    .signin__form {
+        padding-top: 70px;
+        padding-left: 200px !important;
+        padding-right: 200px !important;
+    }
+}

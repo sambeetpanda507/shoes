@@ -4,76 +4,116 @@ import Badge from "@material-ui/core/Badge";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import "./css/nav.css";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ProductContext } from "../ProductContext";
 
 const linkVariant = {
-  hidden: {
-    opacity: 0,
-    y: "-200px",
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-  },
-  hover: {
-    scale: 1.2,
-    transition: { type: "spring", stiffness: 1000 },
-  },
+    hidden: {
+        opacity: 0,
+        y: "-200px",
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+    },
+    hover: {
+        scale: 1.2,
+        transition: { type: "spring", stiffness: 1000 },
+    },
 };
 
 export const Nav = () => {
-  const [state, dispatch] = useContext(ProductContext);
-  return (
-    <Bootstrap.Navbar collapseOnSelect className="nav__bg pt-3">
-      <Bootstrap.Navbar.Toggle aria-controls="responsive-navbar-nav" />
-      <Bootstrap.Navbar.Collapse id="responsive-navbar-nav">
-        <Bootstrap.Nav className="ml-auto mr-auto">
-          <motion.span
-            variants={linkVariant}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-          >
-            <Link to="/" className="nav__link p-2">
-              HOME
-            </Link>
-          </motion.span>
-          <motion.span
-            variants={linkVariant}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-          >
-            <Link to="/orders" className="nav__link p-2">
-              ORDERS
-            </Link>
-          </motion.span>
-          <motion.span
-            variants={linkVariant}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-          >
-            <Link to="/signin" className="nav__link p-2">
-              SIGN IN
-            </Link>
-          </motion.span>
-          <motion.span
-            i
-            variants={linkVariant}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-          >
-            <Link to="/cart" className="nav__link p-2">
-              <Badge color="error" badgeContent={state.cart.length}>
-                <ShoppingCartIcon />
-              </Badge>
-            </Link>
-          </motion.span>
-        </Bootstrap.Nav>
-      </Bootstrap.Navbar.Collapse>
-    </Bootstrap.Navbar>
-  );
+    const [state, dispatch] = useContext(ProductContext);
+    const path = useLocation().pathname;
+    return (
+        <Bootstrap.Navbar collapseOnSelect className="nav__bg pt-3">
+            <Bootstrap.Navbar.Toggle aria-controls="responsive-navbar-nav" />
+            <Bootstrap.Navbar.Collapse id="responsive-navbar-nav">
+                <Bootstrap.Nav className="ml-auto mr-auto">
+                    <motion.span
+                        variants={linkVariant}
+                        initial="hidden"
+                        animate="visible"
+                        whileHover="hover"
+                        className={
+                            path === "/"
+                                ? "bg-success text-white"
+                                : "text-success"
+                        }
+                    >
+                        <Link
+                            to="/"
+                            className={
+                                path === "/"
+                                    ? "nav__link p-2 text-white"
+                                    : "nav__link p-2 text-success"
+                            }
+                        >
+                            HOME
+                        </Link>
+                    </motion.span>
+                    <motion.span
+                        variants={linkVariant}
+                        initial="hidden"
+                        animate="visible"
+                        whileHover="hover"
+                        className={
+                            path === "/orders"
+                                ? "bg-success text-white"
+                                : "text-success"
+                        }
+                    >
+                        <Link
+                            to="/orders"
+                            className={
+                                path === "/orders"
+                                    ? "nav__link p-2 text-white"
+                                    : "nav__link p-2 text-success"
+                            }
+                        >
+                            ORDERS
+                        </Link>
+                    </motion.span>
+                    <motion.span
+                        variants={linkVariant}
+                        initial="hidden"
+                        animate="visible"
+                        whileHover="hover"
+                        className={
+                            path === "/signin"
+                                ? "bg-success text-white"
+                                : "text-success"
+                        }
+                    >
+                        <Link
+                            to="/signin"
+                            className={
+                                path === "/signin"
+                                    ? "nav__link p-2 text-white"
+                                    : "nav__link p-2 text-success"
+                            }
+                        >
+                            SIGN IN
+                        </Link>
+                    </motion.span>
+                    <motion.span
+                        i
+                        variants={linkVariant}
+                        initial="hidden"
+                        animate="visible"
+                        whileHover="hover"
+                    >
+                        <Link to="/cart" className="nav__link p-2">
+                            <Badge
+                                color="error"
+                                badgeContent={state.cart.length}
+                            >
+                                <ShoppingCartIcon />
+                            </Badge>
+                        </Link>
+                    </motion.span>
+                </Bootstrap.Nav>
+            </Bootstrap.Navbar.Collapse>
+        </Bootstrap.Navbar>
+    );
 };
