@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import * as Bootstrap from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./css/signin.css";
+import axios from "axios";
 
 const productVariant = {
     hidden: {
@@ -24,7 +25,7 @@ const productVariant = {
     },
 };
 
-function Signin() {
+function Signin(props) {
     const [email, setEmail] = useState("");
 
     const [password, setPassword] = useState("");
@@ -38,6 +39,25 @@ function Signin() {
         }
     };
 
+    const onSigninHandler = (e) => {
+        e.preventDefault();
+        axios({
+            url: "http://localhost:8080/api/signin",
+            method: "POST",
+            data: { email: email, password: password },
+        })
+            .then((result) => {
+                if (result.status === 200) {
+                    window.localStorage.setItem(
+                        "user",
+                        JSON.stringify(result.data)
+                    );
+                    props.history.push("/");
+                }
+            })
+            .catch((err) => console.log(err));
+    };
+
     return (
         <motion.div
             variants={productVariant}
@@ -48,7 +68,10 @@ function Signin() {
         >
             <div className="signin__body container">
                 <div className="signin__form mt-5 p-3">
-                    <Bootstrap.Form>
+                    <Bootstrap.Form
+                        autoComplete="off"
+                        onSubmit={onSigninHandler}
+                    >
                         <Bootstrap.Form.Group controlId="formBasicEmail">
                             <TextField
                                 id="outlined-basic"

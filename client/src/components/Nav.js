@@ -25,6 +25,12 @@ const linkVariant = {
 export const Nav = () => {
     const [state, dispatch] = useContext(ProductContext);
     const path = useLocation().pathname;
+    const loggedInUser = window.localStorage.getItem("user");
+    const logoutHandler = (e) => {
+        e.preventDefault();
+        window.localStorage.removeItem("user");
+        window.location.replace("/");
+    };
     return (
         <Bootstrap.Navbar collapseOnSelect className="nav__bg pt-3">
             <Bootstrap.Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -85,16 +91,26 @@ export const Nav = () => {
                                 : "text-success"
                         }
                     >
-                        <Link
-                            to="/signin"
-                            className={
-                                path === "/signin"
-                                    ? "nav__link p-2 text-white"
-                                    : "nav__link p-2 text-success"
-                            }
-                        >
-                            SIGN IN
-                        </Link>
+                        {loggedInUser ? (
+                            <Link
+                                to="/logout"
+                                className="nav__link p-2 text-success"
+                                onClick={logoutHandler}
+                            >
+                                LOGOUT
+                            </Link>
+                        ) : (
+                            <Link
+                                to="/signin"
+                                className={
+                                    path === "/signin"
+                                        ? "nav__link p-2 text-white"
+                                        : "nav__link p-2 text-success"
+                                }
+                            >
+                                SIGN IN
+                            </Link>
+                        )}
                     </motion.span>
                     <motion.span
                         i

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import * as Bootstrap from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./css/signin.css";
+import axios from "axios";
 
 const productVariant = {
     hidden: {
@@ -24,7 +25,7 @@ const productVariant = {
     },
 };
 
-function Signup() {
+function Signup(props) {
     const [name, setName] = useState("");
 
     const [email, setEmail] = useState("");
@@ -42,6 +43,27 @@ function Signup() {
         }
     };
 
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+        if (email && name && password) {
+            postSignup();
+        }
+    };
+
+    const postSignup = () => {
+        axios({
+            url: "http://localhost:8080/api/signup",
+            method: "POST",
+            data: { name: name, email: email, password: password },
+        })
+            .then((result) => {
+                if (result.status === 201) {
+                    props.history.push("/signin");
+                }
+            })
+            .catch((error) => console.log(error));
+    };
+
     return (
         <motion.div
             variants={productVariant}
@@ -52,7 +74,7 @@ function Signup() {
         >
             <div className="signin__body container">
                 <div className="signin__form mt-5 p-lg-5 p-xl-5 p-3">
-                    <Bootstrap.Form>
+                    <Bootstrap.Form onSubmit={onSubmitHandler}>
                         <Bootstrap.Form.Group controlId="formBasicEmail">
                             <TextField
                                 id="outlined-basic"
@@ -96,6 +118,7 @@ function Signup() {
                                 onChange={onChangeHandler}
                             />
                             <Bootstrap.Form.Text className="text-muted">
+                                Password must be atleast 6 characters long.
                                 Already have an account?{" "}
                                 <Link to="/signin">Signin.</Link>
                             </Bootstrap.Form.Text>
@@ -107,7 +130,7 @@ function Signup() {
                             variant="contained"
                             color="primary"
                         >
-                            Signin
+                            Signup
                         </Button>
                     </Bootstrap.Form>
                 </div>

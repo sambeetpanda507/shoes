@@ -5,65 +5,73 @@ import { ProductContext, ACTIONS } from "../ProductContext";
 import { Link } from "react-router-dom";
 
 export const Product = ({
-  _id,
-  img,
-  title,
-  mrp,
-  price,
-  save,
-  addAnimation,
-  history,
+    _id,
+    img,
+    title,
+    mrp,
+    price,
+    save,
+    addAnimation,
+    history,
 }) => {
-  const [state, dispatch] = useContext(ProductContext);
+    const [state, dispatch] = useContext(ProductContext);
+    const loggedInUser = window.localStorage.getItem("user");
 
-  return (
-    <Bootstrap.Card style={{ width: "18rem" }} className="shop__card">
-      <Bootstrap.Card.Img variant="top" src={img} />
-      <Bootstrap.Card.Body>
-        <Bootstrap.Card.Title>{title}</Bootstrap.Card.Title>
-
-        <p
-          style={{
-            lineHeight: "5px",
-            textDecoration: "line-through",
-          }}
-        >
-          M.R.P :<span>₹ {mrp}</span>
-        </p>
-        <p style={{ lineHeight: "5px" }}>
-          Price :<span className="text-danger">₹ {price}</span>
-        </p>
-        <p style={{ lineHeight: "5px" }}>
-          You save :<span className="text-danger">₹ {save}</span>
-        </p>
-
-        <Link to={`/details/${_id}`}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            style={{ outline: "none" }}
-            size="small"
-          >
-            Get Details
-          </Button>
-        </Link>
-        <Button
-          variant="outlined"
-          color="primary"
-          style={{ outline: "none" }}
-          className="ml-2"
-          size="small"
-          onClick={() => {
+    const addToCartHandler = () => {
+        if (loggedInUser) {
             addAnimation();
             dispatch({
-              type: ACTIONS.ADD,
-              payload: { id: _id },
+                type: ACTIONS.ADD,
+                payload: { id: _id },
             });
-          }}
-        >
-          Add to cart
-        </Button>
-      </Bootstrap.Card.Body>
-    </Bootstrap.Card>
-  );
+        } else {
+            history.push("/signin");
+        }
+    };
+
+    return (
+        <Bootstrap.Card style={{ width: "18rem" }} className="shop__card">
+            <Bootstrap.Card.Img variant="top" src={img} />
+            <Bootstrap.Card.Body>
+                <Bootstrap.Card.Title>{title}</Bootstrap.Card.Title>
+
+                <p
+                    style={{
+                        lineHeight: "5px",
+                        textDecoration: "line-through",
+                    }}
+                >
+                    M.R.P :<span>₹ {mrp}</span>
+                </p>
+                <p style={{ lineHeight: "5px" }}>
+                    Price :<span className="text-danger">₹ {price}</span>
+                </p>
+                <p style={{ lineHeight: "5px" }}>
+                    You save :<span className="text-danger">₹ {save}</span>
+                </p>
+
+                <Link to={`/details/${_id}`}>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        style={{ outline: "none" }}
+                        size="small"
+                    >
+                        Get Details
+                    </Button>
+                </Link>
+
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    style={{ outline: "none" }}
+                    className="ml-2"
+                    size="small"
+                    onClick={addToCartHandler}
+                >
+                    Add to cart
+                </Button>
+            </Bootstrap.Card.Body>
+        </Bootstrap.Card>
+    );
 };

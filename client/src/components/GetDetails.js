@@ -4,6 +4,7 @@ import * as Bootstrap from "react-bootstrap";
 import "./css/shop.css";
 import Button from "@material-ui/core/Button";
 import { motion } from "framer-motion";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const containerVariant = {
     hidden: {
@@ -48,6 +49,19 @@ export const GetDetails = (props) => {
             });
         }, 1500);
     };
+    const loggedInUser = window.localStorage.getItem("user");
+
+    const addToCartHandler = () => {
+        if (loggedInUser) {
+            addAnimation();
+            dispatch({
+                type: ACTIONS.ADD,
+                payload: { id: props.match.params.id },
+            });
+        } else {
+            props.history.push("/signin");
+        }
+    };
 
     return (
         <motion.div
@@ -57,54 +71,64 @@ export const GetDetails = (props) => {
             exit="exit"
             className="details d-flex justify-content-center align-items-center p-1"
         >
-            <motion.div
-                initial={{ opacity: 0, x: "-200vw" }}
-                animate={initial}
-                className="details__added"
-            >
-                {state.error ? "Already added !!!" : "Added to cart"}
-            </motion.div>
-            <Bootstrap.Card style={{ width: "18rem" }} className="shop__card">
-                <Bootstrap.Card.Img variant="top" src={shoe[0].img} />
-                <Bootstrap.Card.Body>
-                    <Bootstrap.Card.Title>{shoe[0].title}</Bootstrap.Card.Title>
-                    <p
-                        style={{
-                            lineHeight: "5px",
-                            textDecoration: "line-through",
-                        }}
+            {shoe[0] ? (
+                <>
+                    <motion.div
+                        initial={{ opacity: 0, x: "-200vw" }}
+                        animate={initial}
+                        className="details__added"
                     >
-                        M.R.P :<span>₹ {shoe[0].mrp}</span>
-                    </p>
-                    <p style={{ lineHeight: "5px" }}>
-                        Price :
-                        <span className="text-danger">₹ {shoe[0].price}</span>
-                    </p>
-                    <p style={{ lineHeight: "5px" }}>
-                        You save :
-                        <span className="text-danger">₹ {shoe[0].youSave}</span>
-                    </p>
-                    <Bootstrap.Card.Text>
-                        Nike was founded in 1964 as Blue Ribbon Sports by Bill
-                        Bowerman, a track-and-field coach at the University of
-                        Oregon, and his former student Phil Knight.
-                    </Bootstrap.Card.Text>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className="btn-block"
-                        onClick={() => {
-                            addAnimation();
-                            dispatch({
-                                type: ACTIONS.ADD,
-                                payload: { id: props.match.params.id },
-                            });
-                        }}
+                        {state.error ? "Already added !!!" : "Added to cart"}
+                    </motion.div>
+                    <Bootstrap.Card
+                        style={{ width: "18rem" }}
+                        className="shop__card"
                     >
-                        Add to cart
-                    </Button>
-                </Bootstrap.Card.Body>
-            </Bootstrap.Card>
+                        <Bootstrap.Card.Img variant="top" src={shoe[0].img} />
+                        <Bootstrap.Card.Body>
+                            <Bootstrap.Card.Title>
+                                {shoe[0].title}
+                            </Bootstrap.Card.Title>
+                            <p
+                                style={{
+                                    lineHeight: "5px",
+                                    textDecoration: "line-through",
+                                }}
+                            >
+                                M.R.P :<span>₹ {shoe[0].mrp}</span>
+                            </p>
+                            <p style={{ lineHeight: "5px" }}>
+                                Price :
+                                <span className="text-danger">
+                                    ₹ {shoe[0].price}
+                                </span>
+                            </p>
+                            <p style={{ lineHeight: "5px" }}>
+                                You save :
+                                <span className="text-danger">
+                                    ₹ {shoe[0].youSave}
+                                </span>
+                            </p>
+                            <Bootstrap.Card.Text>
+                                Nike was founded in 1964 as Blue Ribbon Sports
+                                by Bill Bowerman, a track-and-field coach at the
+                                University of Oregon, and his former student
+                                Phil Knight.
+                            </Bootstrap.Card.Text>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className="btn-block"
+                                onClick={addToCartHandler}
+                            >
+                                Add to cart
+                            </Button>
+                        </Bootstrap.Card.Body>
+                    </Bootstrap.Card>
+                </>
+            ) : (
+                <CircularProgress />
+            )}
         </motion.div>
     );
 };

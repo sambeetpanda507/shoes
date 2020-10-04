@@ -19,6 +19,13 @@ app.get("/", (req, res, next) => {
     res.send("<h1>Hello World</h1>");
 });
 
+app.use((error, req, res, next) => {
+    console.log("error : ", error);
+    res.status(error.statusCode).json({
+        message: error.message,
+    });
+});
+
 db.then(() => {
     console.log("connected to the database");
     app.listen(port, () => {

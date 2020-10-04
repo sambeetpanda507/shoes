@@ -3,6 +3,7 @@ import "./css/shop.css";
 import { Product } from "./Product";
 import { motion } from "framer-motion";
 import { ProductContext } from "../ProductContext";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const productVariant = {
     hidden: {
@@ -45,37 +46,45 @@ export const ShopNow = (props) => {
     return (
         <div className="shop container my-4 p-3">
             <div className="row">
-                <motion.div
-                    initial={{ opacity: 0, x: "200vw" }}
-                    animate={initial}
-                    className="shop__added"
-                >
-                    {state.error ? "Already added !!!" : "Added to cart"}
-                </motion.div>
-                {state.products.map((items) => {
-                    return (
+                {state.products.length > 0 ? (
+                    <>
                         <motion.div
-                            key={items._id}
-                            variants={productVariant}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 d-flex justify-content-center my-3"
+                            initial={{ opacity: 0, x: "200vw" }}
+                            animate={initial}
+                            className="shop__added"
                         >
-                            <Product
-                                _id={items._id}
-                                img={items.img}
-                                title={items.title}
-                                count={items.count}
-                                mrp={items.mrp}
-                                price={items.price}
-                                save={items.youSave}
-                                addAnimation={addAnimation}
-                                history={props.history}
-                            />
+                            {state.error
+                                ? "Already added !!!"
+                                : "Added to cart"}
                         </motion.div>
-                    );
-                })}
+                        {state.products.map((items) => {
+                            return (
+                                <motion.div
+                                    key={items._id}
+                                    variants={productVariant}
+                                    initial="hidden"
+                                    animate="visible"
+                                    exit="exit"
+                                    className="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 d-flex justify-content-center my-3"
+                                >
+                                    <Product
+                                        _id={items._id}
+                                        img={items.img}
+                                        title={items.title}
+                                        count={items.count}
+                                        mrp={items.mrp}
+                                        price={items.price}
+                                        save={items.youSave}
+                                        addAnimation={addAnimation}
+                                        history={props.history}
+                                    />
+                                </motion.div>
+                            );
+                        })}
+                    </>
+                ) : (
+                    <CircularProgress />
+                )}
             </div>
         </div>
     );
