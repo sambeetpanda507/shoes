@@ -66,4 +66,18 @@ router.post(
     authController.postForgot
 );
 
+router.patch(
+    "/reset/:token",
+    [
+        body("email")
+            .isEmail()
+            .normalizeEmail()
+            .withMessage("please enter a valid email"),
+        body("password")
+            .isLength({ min: 6 })
+            .withMessage("password must be atleast six charactes long"),
+    ],
+    authController.patchResetPassword
+);
+
 module.exports = router;

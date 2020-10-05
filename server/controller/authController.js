@@ -177,3 +177,52 @@ module.exports.postForgot = (req, res, next) => {
             });
     });
 };
+
+module.exports.patchResetPassword = (req, res, next) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        return res.status(401).json({
+            message: error.array()[0].msg,
+        });
+    }
+    const { email, password } = req.body;
+    const token = req.params.token;
+    UserModel.findOne({
+        email: email,
+        resetToken: token,
+        tokenExpiration: {
+            $gt: Date.now(),
+        },
+    })
+        .then((user) => {
+            if (!user) {
+                const error = new Error(
+                    "invalid email address or password reset has expired"
+                );
+                error.statusCode = 401;
+                throw error;
+            }
+            bcrypt
+                .hash(password, 12)
+                .then((hashedPaassword) => {
+                    (user.password = hashedPaassword),
+                        (user.resetToken = ""),
+                        (user.resetToken = "");
+                    return user.save();
+                })
+                .then((result) => {
+                    res.status(201).json(result);
+                })
+                .catch((err) => {
+                    res.status(500).json({
+                        error: err,
+                    });
+                });
+        })
+        .catch((err) => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+};
