@@ -11,7 +11,7 @@ import { GetDetails } from "./components/GetDetails";
 import { Cart } from "./components/Cart";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
-
+import Forgot from "./components/Forgot";
 export const App = () => {
     const location = useLocation();
     return (
@@ -26,6 +26,7 @@ export const App = () => {
                         <Route path="/cart" component={Cart} />
                         <Route path="/signin" component={Signin} />
                         <Route path="/signup" component={Signup} />
+                        <Route path="/forgot" component={Forgot} />
                     </Switch>
                 </AnimatePresence>
             </ProductProvider>

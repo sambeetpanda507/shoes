@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import * as Bootstrap from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./css/signin.css";
-import axios from "axios";
+import axios from "../axios";
 
 const productVariant = {
     hidden: {
@@ -42,7 +42,7 @@ function Signin(props) {
     const onSigninHandler = (e) => {
         e.preventDefault();
         axios({
-            url: "http://localhost:8080/api/signin",
+            url: "/signin",
             method: "POST",
             data: { email: email, password: password },
         })
@@ -104,7 +104,7 @@ function Signin(props) {
                             />
                             <Bootstrap.Form.Text className="text-muted">
                                 Forgot password? Click{" "}
-                                <Link to="/forgotPassword">here. </Link>
+                                <Link to="/forgot">here. </Link>
                                 Don't have an account?{" "}
                                 <Link to="/signup">SignUp.</Link>
                             </Bootstrap.Form.Text>

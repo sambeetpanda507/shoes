@@ -48,4 +48,22 @@ router.post(
     authController.postSignin
 );
 
+router.post(
+    "/forgot",
+    [
+        body("email")
+            .isEmail()
+            .withMessage("please enter a valid email.")
+            .normalizeEmail()
+            .custom((value, { req }) => {
+                return UserModel.findOne({ email: value }).then((user) => {
+                    if (!user) {
+                        return Promise.reject("Invalid email address");
+                    }
+                });
+            }),
+    ],
+    authController.postForgot
+);
+
 module.exports = router;

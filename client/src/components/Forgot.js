@@ -25,43 +25,25 @@ const productVariant = {
     },
 };
 
-function Signup(props) {
-    const [name, setName] = useState("");
-
+function Forgot(props) {
     const [email, setEmail] = useState("");
-
-    const [password, setPassword] = useState("");
 
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
         if (name === "email") {
             setEmail(value);
-        } else if (name === "password") {
-            setPassword(value);
-        } else if (name === "name") {
-            setName(value);
         }
     };
 
-    const onSubmitHandler = (e) => {
+    const onForgotHandler = (e) => {
         e.preventDefault();
-        if (email && name && password) {
-            postSignup();
-        }
-    };
-
-    const postSignup = () => {
         axios({
-            url: "/signup",
+            url: "/forgot",
             method: "POST",
-            data: { name: name, email: email, password: password },
+            data: { email: email },
         })
-            .then((result) => {
-                if (result.status === 201) {
-                    props.history.push("/signin");
-                }
-            })
-            .catch((error) => console.log(error));
+            .then((result) => console.log(result))
+            .catch((err) => console.error(err));
     };
 
     return (
@@ -73,21 +55,11 @@ function Signup(props) {
             className="signin"
         >
             <div className="signin__body container">
-                <div className="signin__form mt-5 p-lg-5 p-xl-5 p-3">
-                    <Bootstrap.Form onSubmit={onSubmitHandler}>
-                        <Bootstrap.Form.Group controlId="formBasicEmail">
-                            <TextField
-                                id="outlined-basic"
-                                label="Name"
-                                variant="standard"
-                                name="name"
-                                type="text"
-                                required
-                                fullWidth
-                                value={name}
-                                onChange={onChangeHandler}
-                            />
-                        </Bootstrap.Form.Group>
+                <div className="signin__form mt-5 p-3">
+                    <Bootstrap.Form
+                        autoComplete="off"
+                        onSubmit={onForgotHandler}
+                    >
                         <Bootstrap.Form.Group controlId="formBasicEmail">
                             <TextField
                                 id="outlined-basic"
@@ -97,40 +69,24 @@ function Signup(props) {
                                 type="email"
                                 required
                                 fullWidth
+                                color="primary"
                                 value={email}
                                 onChange={onChangeHandler}
                             />
                             <Bootstrap.Form.Text className="text-muted">
                                 We'll never share your email with anyone else.
-                            </Bootstrap.Form.Text>
-                        </Bootstrap.Form.Group>
-
-                        <Bootstrap.Form.Group controlId="formBasicPassword">
-                            <TextField
-                                id="outlined-basic"
-                                label="Password"
-                                variant="standard"
-                                name="password"
-                                type="text"
-                                required
-                                fullWidth
-                                value={password}
-                                onChange={onChangeHandler}
-                            />
-                            <Bootstrap.Form.Text className="text-muted">
-                                Password must be atleast 6 characters long.
                                 Already have an account?{" "}
-                                <Link to="/signin">Signin.</Link>
+                                <Link to="/signin">Signin.</Link> Don't have an
+                                account? <Link to="/signup">SignUp.</Link>
                             </Bootstrap.Form.Text>
                         </Bootstrap.Form.Group>
-
                         <Button
                             type="submit"
                             size="large"
                             variant="contained"
                             color="primary"
                         >
-                            Signup
+                            Reset
                         </Button>
                     </Bootstrap.Form>
                 </div>
@@ -139,4 +95,4 @@ function Signup(props) {
     );
 }
 
-export default Signup;
+export default Forgot;

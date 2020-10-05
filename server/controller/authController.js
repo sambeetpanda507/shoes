@@ -1,9 +1,20 @@
-const ProductModel = require("../model/productModel");
-const UserModel = require("../model/userModel");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 require("dotenv").config();
+
+const ProductModel = require("../model/productModel");
+const UserModel = require("../model/userModel");
+
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.APP_EMAIL,
+        pass: process.env.APP_PASSWORD,
+    },
+});
 
 module.exports.getProducts = (req, res, next) => {
     ProductModel.find()
@@ -21,7 +32,7 @@ module.exports.postSignup = (req, res, next) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
         console.log(error);
-        return res.status(422).json({
+        return res.status(403).json({
             message: error.array()[0].msg,
         });
     }
@@ -105,4 +116,50 @@ module.exports.postSignin = (req, res, next) => {
             }
             next(err);
         });
+};
+
+module.exports.postForgot = (req, res, next) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+        return res.status(403).json({
+            message: error.array()[0].msg,
+        });
+    }
+    const { email } = req.body;
+    crypto.randomBytes(32, (err, buff) => {
+        if (err) {
+            return res.status(500).json({
+                message: "Internal server error",
+            });
+        }
+        const token = buff.toString("hex");
+        UserModel.updateOne(
+            { email: email },
+            {
+                $set: {
+                    resetToken: token,
+                    tokenExpiration: Date.now() + 1000 * 60 * 10,
+                },
+            }
+        )
+            .then((result) => {
+                if (!result) {
+                    const error = new Error("internal server error");
+                    error.statusCode = 500;
+                    throw error;
+                }
+                transporter.sendMail({
+                    from: process.env.APP_EMAIL,
+                    to: email,
+                    subject: "password reset request",
+                    html: `<p>You have requested for the password reset.</p><p> Click <a href='http://localhost:3000/reset/${token}'>here</a> to reset password</p>`,
+                });
+            })
+            .catch((err) => {
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            });
+    });
 };
