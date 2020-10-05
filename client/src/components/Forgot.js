@@ -6,6 +6,9 @@ import * as Bootstrap from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./css/signin.css";
 import axios from "../axios";
+import Error from "./Error";
+import { Alert, AlertTitle } from "@material-ui/lab";
+import Collapse from "@material-ui/core/Collapse";
 
 const productVariant = {
     hidden: {
@@ -28,11 +31,17 @@ const productVariant = {
 function Forgot(props) {
     const [email, setEmail] = useState("");
 
+    const [error, setError] = useState(null);
+
+    const [success, setSuccess] = useState(null);
+
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
         if (name === "email") {
             setEmail(value);
         }
+        setError(null);
+        setSuccess(null);
     };
 
     const onForgotHandler = (e) => {
@@ -42,8 +51,14 @@ function Forgot(props) {
             method: "POST",
             data: { email: email },
         })
-            .then((result) => console.log(result))
-            .catch((err) => console.error(err));
+            .then((result) => {
+                setSuccess(`check ${email} to reset your password`);
+                setError(null);
+            })
+            .catch((err) => {
+                setSuccess(null);
+                setError(err);
+            });
     };
 
     return (
@@ -55,6 +70,17 @@ function Forgot(props) {
             className="signin"
         >
             <div className="signin__body container">
+                {error ? (
+                    <Error className="my-3" error={error} success={success} />
+                ) : null}
+                {success ? (
+                    <div>
+                        <Alert severity="success">
+                            <AlertTitle>Success</AlertTitle>
+                            {success} — <strong>check it out!</strong>
+                        </Alert>
+                    </div>
+                ) : null}
                 <div className="signin__form mt-5 p-3">
                     <Bootstrap.Form
                         autoComplete="off"

@@ -6,6 +6,7 @@ import * as Bootstrap from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./css/signin.css";
 import axios from "../axios";
+import Error from "./Error";
 
 const productVariant = {
     hidden: {
@@ -30,6 +31,8 @@ function Signin(props) {
 
     const [password, setPassword] = useState("");
 
+    const [error, setError] = useState(null);
+
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
         if (name === "email") {
@@ -53,9 +56,12 @@ function Signin(props) {
                         JSON.stringify(result.data)
                     );
                     props.history.push("/");
+                    setError(null);
                 }
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                setError(err);
+            });
     };
 
     return (
@@ -67,6 +73,7 @@ function Signin(props) {
             className="signin"
         >
             <div className="signin__body container">
+                {error ? <Error className="my-3" error={error} /> : null}
                 <div className="signin__form mt-5 p-3">
                     <Bootstrap.Form
                         autoComplete="off"

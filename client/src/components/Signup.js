@@ -6,6 +6,7 @@ import * as Bootstrap from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./css/signin.css";
 import axios from "../axios";
+import Error from "./Error";
 
 const productVariant = {
     hidden: {
@@ -31,6 +32,8 @@ function Signup(props) {
     const [email, setEmail] = useState("");
 
     const [password, setPassword] = useState("");
+
+    const [error, setError] = useState(null);
 
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
@@ -61,7 +64,9 @@ function Signup(props) {
                     props.history.push("/signin");
                 }
             })
-            .catch((error) => console.log(error));
+            .catch((error) => {
+                setError(error);
+            });
     };
 
     return (
@@ -73,6 +78,7 @@ function Signup(props) {
             className="signin"
         >
             <div className="signin__body container">
+                {error ? <Error className="my-3" error={error} /> : null}
                 <div className="signin__form mt-5 p-lg-5 p-xl-5 p-3">
                     <Bootstrap.Form onSubmit={onSubmitHandler}>
                         <Bootstrap.Form.Group controlId="formBasicEmail">

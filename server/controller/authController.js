@@ -24,14 +24,13 @@ module.exports.getProducts = (req, res, next) => {
             });
         })
         .catch((err) => {
-            console.log(err);
+            next(err);
         });
 };
 
 module.exports.postSignup = (req, res, next) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
-        console.log(error);
         return res.status(403).json({
             message: error.array()[0].msg,
         });
@@ -68,7 +67,6 @@ module.exports.postSignup = (req, res, next) => {
 module.exports.postSignin = (req, res, next) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
-        console.log(error);
         return res.status(403).json({
             message: error.array()[0].msg,
         });
@@ -91,7 +89,6 @@ module.exports.postSignin = (req, res, next) => {
                 error.statusCode = 401;
                 throw error;
             }
-            console.log(verifiedUser);
             const token = jwt.sign(
                 {
                     _id: verifiedUser._id,
@@ -148,12 +145,29 @@ module.exports.postForgot = (req, res, next) => {
                     error.statusCode = 500;
                     throw error;
                 }
-                transporter.sendMail({
-                    from: process.env.APP_EMAIL,
-                    to: email,
-                    subject: "password reset request",
-                    html: `<p>You have requested for the password reset.</p><p> Click <a href='http://localhost:3000/reset/${token}'>here</a> to reset password</p>`,
-                });
+                transporter
+                    .sendMail({
+                        from: process.env.APP_EMAIL,
+                        to: email,
+                        subject: "password reset request",
+                        html: `<p>You have requested for the password reset.</p><p> Click <a href='http://localhost:3000/reset/${token}'>here</a> to reset password</p>`,
+                    })
+                    .then((mail) => {
+                        if (!mail) {
+                            const error = new Error("internal server error");
+                            error.statusCode = 500;
+                            throw error;
+                        }
+                        res.status(200).json({
+                            message: "mail sent",
+                        });
+                    })
+                    .catch((err) => {
+                        if (!err.statusCode) {
+                            err.statusCode = 500;
+                        }
+                        next(err);
+                    });
             })
             .catch((err) => {
                 if (!err.statusCode) {

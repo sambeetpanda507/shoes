@@ -20,7 +20,6 @@ app.get("/", (req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-    console.log("error : ", error);
     res.status(error.statusCode).json({
         message: error.message,
     });

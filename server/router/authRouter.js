@@ -21,7 +21,7 @@ router.post(
                 return UserModel.findOne({ email: value }).then((user) => {
                     if (user) {
                         return Promise.reject(
-                            "email id already exist.Please choose another one."
+                            "Email id already exist.Please choose another one"
                         );
                     }
                 });
