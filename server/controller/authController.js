@@ -205,13 +205,15 @@ module.exports.patchResetPassword = (req, res, next) => {
             bcrypt
                 .hash(password, 12)
                 .then((hashedPaassword) => {
-                    (user.password = hashedPaassword),
-                        (user.resetToken = ""),
-                        (user.resetToken = "");
+                    user.password = hashedPaassword;
+                    user.resetToken = "";
+                    user.tokenExpiration = Date.now();
                     return user.save();
                 })
                 .then((result) => {
-                    res.status(201).json(result);
+                    res.status(201).json({
+                        message: "password successfully reset",
+                    });
                 })
                 .catch((err) => {
                     res.status(500).json({

@@ -8,7 +8,6 @@ import "./css/signin.css";
 import axios from "../axios";
 import Error from "./Error";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import Collapse from "@material-ui/core/Collapse";
 
 const productVariant = {
     hidden: {
@@ -35,6 +34,8 @@ function Forgot(props) {
 
     const [success, setSuccess] = useState(null);
 
+    const [progress, setProgress] = useState(null);
+
     const onChangeHandler = (e) => {
         const { name, value } = e.target;
         if (name === "email") {
@@ -50,6 +51,13 @@ function Forgot(props) {
             url: "/forgot",
             method: "POST",
             data: { email: email },
+            onDownloadProgress: (progressEvent) => {
+                setProgress(
+                    Math.round(
+                        (progressEvent.loaded / progressEvent.total) * 100
+                    )
+                );
+            },
         })
             .then((result) => {
                 setSuccess(`check ${email} to reset your password`);
@@ -69,10 +77,17 @@ function Forgot(props) {
             exit="exit"
             className="signin"
         >
+            <Bootstrap.ProgressBar
+                animated
+                now={progress}
+                style={{ height: "2px" }}
+                className="mb-3"
+            />
             <div className="signin__body container">
                 {error ? (
                     <Error className="my-3" error={error} success={success} />
                 ) : null}
+
                 {success ? (
                     <div>
                         <Alert severity="success">

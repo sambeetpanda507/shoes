@@ -59,7 +59,7 @@ function Reset(props) {
             data: { email: email, password: password },
         })
             .then((result) => {
-                console.log(result);
+                props.history.replace("/signin");
             })
             .catch((error) => {
                 setError(error);
@@ -75,7 +75,6 @@ function Reset(props) {
             className="signin"
         >
             <div className="signin__body container">
-                {token}
                 {error ? <Error className="my-3" error={error} /> : null}
                 <div className="signin__form mt-5 p-lg-5 p-xl-5 p-3">
                     <Bootstrap.Form onSubmit={onSubmitHandler}>

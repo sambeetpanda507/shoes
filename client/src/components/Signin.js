@@ -40,6 +40,7 @@ function Signin(props) {
         } else if (name === "password") {
             setPassword(value);
         }
+        setError(null);
     };
 
     const onSigninHandler = (e) => {
