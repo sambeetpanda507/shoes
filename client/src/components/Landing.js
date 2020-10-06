@@ -2,7 +2,7 @@ import React from "react";
 import "./css/landing.css";
 import Shoe from "../images/Shoes.png";
 import { motion } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const landingVariant = {
     hidden: {
