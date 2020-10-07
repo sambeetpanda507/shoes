@@ -80,4 +80,6 @@ router.patch(
     authController.patchResetPassword
 );
 
+router.post("/checkout", authController.postCheckout);
+
 module.exports = router;

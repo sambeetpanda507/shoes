@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 require("dotenv").config();
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { v4: uuidv4 } = require("uuid");
 
 const ProductModel = require("../model/productModel");
 const UserModel = require("../model/userModel");
@@ -227,4 +229,37 @@ module.exports.patchResetPassword = (req, res, next) => {
             }
             next(err);
         });
+};
+
+module.exports.postCheckout = (req, res, next) => {
+    const { token, totalPrice } = req.body;
+    const idempotencyKey = uuidv4();
+
+    return stripe.customers
+        .create({
+            email: token.email,
+            source: token.id,
+        })
+        .then((customer) => {
+            stripe.charges.create(
+                {
+                    amount: totalPrice * 100,
+                    currency: "inr",
+                    customer: customer.id,
+                    receipt_email: token.email,
+                    // shipping: {
+                    //     name: token.card.name,
+                    //     country: token.card.address_city,
+                    //     city: token.card.address_city,
+                    //     postal_code: token.card.address_zip,
+                    // },
+                },
+                { idempotencyKey }
+            );
+        })
+        .then((result) => {
+            console.log("result : ", result);
+            res.status(200).json(result);
+        })
+        .catch((err) => console.log(err));
 };
