@@ -5,7 +5,8 @@ import LocalMallIcon from "@material-ui/icons/LocalMall";
 import Button from "@material-ui/core/Button";
 import axios from "../axios";
 import StripeCheckout from "react-stripe-checkout";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const productVariant = {
     hidden: {
         x: "200vw",
@@ -38,6 +39,8 @@ const cartIconVariant = {
     },
 };
 
+// toast.configure();
+
 export const Cart = () => {
     const [state, dispatch] = useContext(ProductContext);
 
@@ -53,8 +56,45 @@ export const Cart = () => {
             method: "POST",
             data: { token: token, totalPrice: totalPrice },
         })
-            .then((result) => console.log(result))
-            .catch((err) => console.log(err));
+            .then((result) => {
+                if (result.status === 200) {
+                    toast.success("Payment Successfull ✔", {
+                        position: "top-right",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                    dispatch({
+                        type: ACTIONS.UPDATE,
+                    });
+                }
+            })
+            .catch((err) => {
+                toast.error("Payment Unsuccessfull ✖", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            });
+    };
+
+    const removeNotifier = () => {
+        toast("Item removed ✖", {
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     };
 
     return (
@@ -75,6 +115,9 @@ export const Cart = () => {
                     <p className="text-secondary">Cart Empty</p>
                 </motion.div>
             )}
+            <div>
+                <ToastContainer />
+            </div>
             {state.cart.map((shoes) => {
                 return (
                     <motion.div
@@ -145,6 +188,7 @@ export const Cart = () => {
                                 <button
                                     className="btn btn-danger btn-sm mt-1"
                                     onClick={() => {
+                                        removeNotifier();
                                         dispatch({
                                             type: ACTIONS.REMOVE,
                                             payload: { id: shoes._id },

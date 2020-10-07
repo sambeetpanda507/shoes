@@ -15,6 +15,7 @@ export const ACTIONS = {
     REMOVE: "remove",
     INC: "increment",
     DEC: "decrement",
+    UPDATE: "update_cart",
 };
 
 const reducer = (state, action) => {
@@ -36,7 +37,8 @@ const reducer = (state, action) => {
 
         case ACTIONS.DEC:
             return decrementCount(state, action.payload.id);
-
+        case ACTIONS.UPDATE:
+            return updateCart(state);
         default:
             throw new Error();
     }
@@ -99,6 +101,13 @@ const decrementCount = (state, id) => {
     return {
         ...state,
         cart: newItem,
+    };
+};
+
+const updateCart = (state) => {
+    return {
+        ...state,
+        cart: [],
     };
 };
 

@@ -9,6 +9,12 @@ const userSchema = new Schema(
         password: { type: String, required: true },
         resetToken: String,
         tokenExpiration: Date,
+        cart: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "products",
+            },
+        ],
     },
     { timestamps: true }
 );
