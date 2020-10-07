@@ -50,7 +50,7 @@ export const Cart = () => {
     );
 
     const handleToken = (token, addresses) => {
-        console.log({ token, addresses });
+        // console.log({ token, addresses });
         axios({
             url: "/checkout",
             method: "POST",
@@ -58,6 +58,8 @@ export const Cart = () => {
         })
             .then((result) => {
                 if (result.status === 200) {
+                    let cartItems = state.cart;
+
                     toast.success("Payment Successfull ✔", {
                         position: "top-right",
                         autoClose: 2000,
@@ -67,9 +69,23 @@ export const Cart = () => {
                         draggable: true,
                         progress: undefined,
                     });
+
                     dispatch({
                         type: ACTIONS.UPDATE,
                     });
+
+                    axios({
+                        url: "/addProducts",
+                        method: "POST",
+                        data: {
+                            cartItems: cartItems,
+                            user: window.localStorage.getItem("user"),
+                        },
+                    })
+                        .then((result) => {
+                            console.log(result);
+                        })
+                        .catch((err) => console.log(err));
                 }
             })
             .catch((err) => {

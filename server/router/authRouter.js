@@ -82,4 +82,8 @@ router.patch(
 
 router.post("/checkout", authController.postCheckout);
 
+router.post("/addProducts", authController.addProducts);
+
+router.post("/getOrders", authController.getOrders);
+
 module.exports = router;

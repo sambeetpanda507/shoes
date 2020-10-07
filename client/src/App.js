@@ -13,6 +13,7 @@ import Signin from "./components/Signin";
 import Signup from "./components/Signup";
 import Forgot from "./components/Forgot";
 import Reset from "./components/Reset";
+import Orders from "./components/Orders";
 export const App = () => {
     const location = useLocation();
     return (
@@ -29,6 +30,7 @@ export const App = () => {
                         <Route path="/signup" component={Signup} />
                         <Route path="/forgot" component={Forgot} />
                         <Route path="/reset/:token" component={Reset} />
+                        <Route path="/orders" component={Orders} />
                     </Switch>
                 </AnimatePresence>
             </ProductProvider>

@@ -9,10 +9,9 @@ const userSchema = new Schema(
         password: { type: String, required: true },
         resetToken: String,
         tokenExpiration: Date,
-        cart: [
+        orders: [
             {
-                type: Schema.Types.ObjectId,
-                ref: "products",
+                cart: Array,
             },
         ],
     },

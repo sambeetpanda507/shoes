@@ -247,19 +247,59 @@ module.exports.postCheckout = (req, res, next) => {
                     currency: "inr",
                     customer: customer.id,
                     receipt_email: token.email,
-                    // shipping: {
-                    //     name: token.card.name,
-                    //     country: token.card.address_city,
-                    //     city: token.card.address_city,
-                    //     postal_code: token.card.address_zip,
-                    // },
                 },
                 { idempotencyKey }
             );
         })
         .then((result) => {
-            console.log("result : ", result);
             res.status(200).json(result);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+};
+
+module.exports.addProducts = (req, res, next) => {
+    const cartItems = req.body.cartItems;
+    const user = JSON.parse(req.body.user);
+    UserModel.findOne({ email: user.email })
+        .then((user) => {
+            user.orders = [...user.orders, { cart: cartItems }];
+            return user.save();
+        })
+        .then((result) => {
+            res.status(201).json({
+                message: "successfully saved",
+            });
+        })
+        .catch((err) => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+};
+
+module.exports.getOrders = (req, res, next) => {
+    const { email } = req.body;
+    UserModel.findOne({ email: email })
+        .then((user) => {
+            if (!user) {
+                const error = new Error("No such user found");
+                error.statusCode = 401;
+                throw error;
+            }
+            res.status(200).json({
+                orders: user.orders,
+            });
+        })
+        .catch((err) => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
 };

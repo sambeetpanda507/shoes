@@ -1,5 +1,5 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import axios from "axios";
+import axios from "./axios";
 
 export const ProductContext = createContext();
 
@@ -116,7 +116,7 @@ export const ProductProvider = (props) => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/products")
+            .get("/products")
             .then((products) => {
                 dispatch({
                     type: ACTIONS.SET_INITIAL,
