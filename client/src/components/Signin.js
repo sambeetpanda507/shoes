@@ -104,7 +104,7 @@ function Signin(props) {
                                 label="Password"
                                 variant="standard"
                                 name="password"
-                                type="text"
+                                type="password"
                                 required
                                 fullWidth
                                 value={password}

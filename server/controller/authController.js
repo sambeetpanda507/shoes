@@ -303,3 +303,25 @@ module.exports.getOrders = (req, res, next) => {
             next(err);
         });
 };
+
+// :TODO store products to the database
+
+// module.exports.storeProducts = (req, res, next) => {
+//     const { img, title, count, mrp, price, youSave } = req.body;
+//     const productModel = new ProductModel({
+//         img: img,
+//         title: title,
+//         count: count,
+//         mrp: mrp,
+//         price: price,
+//         youSave: youSave,
+//     });
+//     productModel
+//         .save()
+//         .then((result) => {
+//             res.status(201).json(result);
+//         })
+//         .catch((err) => {
+//             res.status(500).json(err);
+//         });
+// };

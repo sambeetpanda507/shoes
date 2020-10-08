@@ -8,6 +8,8 @@ const router = express.Router();
 //GET: http://localhost:8080/api/products
 router.get("/products", authController.getProducts);
 
+// router.post("/storeproducts", authController.storeProducts);
+
 //POST: http://localhost:8080/api/signup
 router.post(
     "/signup",

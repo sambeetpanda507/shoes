@@ -51,7 +51,7 @@ function Orders() {
             {orders.length <= 0 ? (
                 <div className="text-center p-3">
                     <CircularProgress />
-                    <h4 className="text-secondary">Login to check orders</h4>
+                    {/* <h4 className="text-secondary">Login to check orders</h4> */}
                 </div>
             ) : (
                 <div>
